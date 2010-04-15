@@ -1,0 +1,34 @@
+<?php
+// add edit links everywhere
+function edit($nid) {
+	if (user_access('administer nodes')) {
+		$url = url('node/'.$nid.'/edit');
+		$url = substr($url,1,strlen($url)-1);
+		$options['attributes']['class'] = 'edit-link';
+		return l('edit',$url,$options);
+	} else { return null; }
+}
+
+function theme_tweaks_preprocess_node(&$vars) {
+	$vars['body'] = $vars['node']->content['body']['#value'];
+}
+
+function back_url($default = false){
+	if (preg_match('/'.$_SERVER['HTTP_HOST'].'/i', $_SERVER['HTTP_REFERER'])) {
+		$back_url = $_SERVER['HTTP_REFERER'];
+	}
+	else if($default) {
+		$back_url = url($default);
+	}
+
+	return $back_url;
+}
+function strip_site_url($string = null) {
+	
+	$string = str_replace($_SERVER['HTTP_HOST'].'/','',$string);
+	$string = str_replace('http://','',$string);
+	$string = str_replace('https://','',$string);
+	return $string;
+	
+}
+?>
