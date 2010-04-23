@@ -23,6 +23,7 @@ function back_url($default = false){
 
 	return $back_url;
 }
+
 function strip_site_url($string = null) {
 	
 	$string = str_replace($_SERVER['HTTP_HOST'].'/','',$string);
