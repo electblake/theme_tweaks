@@ -32,4 +32,50 @@ function strip_site_url($string = null) {
 	return $string;
 	
 }
+
+function plural_check($count) {
+	return $count == 1 ? '' : 's';
+}
+
+function tweaks_trim_text($alter, $value) {
+  if (drupal_strlen($value) > $alter['max_length']) {
+    $value = drupal_substr($value, 0, $alter['max_length']);
+    // TODO: replace this with cleanstring of ctools
+    if (!empty($alter['word_boundary'])) {
+      $regex = "(.*)\b.+";
+      if (function_exists('mb_ereg')) {
+        mb_regex_encoding('UTF-8');
+        $found = mb_ereg($regex, $value, $matches);
+      }
+      else {
+        $found = preg_match("/$regex/us", $value, $matches);
+      }
+      if ($found) {
+        $value = $matches[1];
+      }
+    }
+    // Remove scraps of HTML entities from the end of a strings
+    $value = rtrim(preg_replace('/(?:<(?!.+>)|&(?!.+;)).*$/us', '', $value));
+
+    if (!empty($alter['ellipsis'])) {
+      $value .= '...';
+    }
+  }
+  if (!empty($alter['html'])) {
+    $value = _filter_htmlcorrector($value);
+  }
+
+  return $value;
+}
+/*
+ * Implements hook_form_alter()
+*/
+
+function theme_tweaks_form_alter(&$form, &$form_state, $form_id) {
+  /**
+   * Removes the unnecessary preview button, if you have anything against it.
+   * Does NOT check to ensure preview is optional!  Make preview optional first.
+   */
+  unset ($form['buttons']['preview']);
+}
 ?>
