@@ -1,14 +1,13 @@
 <?php
 // add edit links everywhere
 function edit($nid) {
-	if (user_access('administer nodes')) {
-		$url = url('node/'.$nid.'/edit');
-		$url = substr($url,1,strlen($url)-1);
-		$options['attributes']['class'] = 'edit-link';
-		return l('edit',$url,$options);
-	} else { return null; }
+  if (user_access('administer nodes')) {
+     $url = url('node/'.$nid.'/edit?detination='.$_GET['q']);
+     $url = substr($url,1,strlen($url)-1);
+     $options['attributes']['class'] = 'edit-link';
+     return l('edit',$url,$options);
+  } else { return null; }
 }
-
 function theme_tweaks_preprocess_node(&$vars) {
 	$vars['body'] = $vars['node']->content['body']['#value'];
 }
